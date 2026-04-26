@@ -10,6 +10,8 @@ import {
 } from "@/app/ui/components/card";
 import { Input } from "@/app/ui/components/input";
 import { Label } from "@/app/ui/components/label";
+import { LabelSeparator } from "@/app/ui/components/labelSeparator";
+import { LinkButton } from "@/app/ui/components/linkButton";
 
 export default function Page() {
   return (
@@ -20,9 +22,6 @@ export default function Page() {
           <CardDescription>
             Enter your email and password below to login to your account
           </CardDescription>
-          {/* <CardAction>
-          <Button variant="link">Sign Up</Button>
-        </CardAction> */}
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-6">
@@ -45,9 +44,16 @@ export default function Page() {
           <Button type="submit" className="w-full">
             Login
           </Button>
+          <LabelSeparator>or</LabelSeparator>
           <Button variant="outline" className="w-full">
             Login with Google
           </Button>
+          <div>
+            <span>New to AppliMap? </span>
+            <LinkButton href="/register" className="px-0">
+              Create an Account
+            </LinkButton>
+          </div>
         </CardFooter>
       </Card>
     </form>
