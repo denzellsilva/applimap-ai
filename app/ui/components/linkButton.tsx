@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Button } from "@/app/ui/components/button";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
-type LinkButtonProps = React.ComponentProps<typeof Link> & {
+interface LinkButtonProps extends ComponentProps<typeof Link> {
   children: ReactNode;
   className?: string;
-};
+}
 
 export function LinkButton({
   children,
