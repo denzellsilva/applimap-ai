@@ -1,4 +1,4 @@
-import { Button } from "@/app/ui/components/button";
+import { Button } from "@/ui/components/button";
 import {
   Card,
   CardAction,
@@ -7,11 +7,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/app/ui/components/card";
-import { Input } from "@/app/ui/components/input";
-import { Label } from "@/app/ui/components/label";
-import { LabelSeparator } from "@/app/ui/components/labelSeparator";
-import { LinkButton } from "@/app/ui/components/linkButton";
+} from "@/ui/components/card";
+import { Input } from "@/ui/components/input";
+import { Label } from "@/ui/components/label";
+import { LabelSeparator } from "@/ui/components/labelSeparator";
+import { LinkButton } from "@/ui/components/linkButton";
 
 export default function Page() {
   return (
@@ -29,6 +29,7 @@ export default function Page() {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="m@example.com"
                 required
@@ -36,7 +37,7 @@ export default function Page() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required />
+              <Input id="password" name="password" type="password" required />
             </div>
           </div>
         </CardContent>
@@ -45,7 +46,7 @@ export default function Page() {
             Login
           </Button>
           <LabelSeparator>or</LabelSeparator>
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" type="button" className="w-full">
             Login with Google
           </Button>
           <div>

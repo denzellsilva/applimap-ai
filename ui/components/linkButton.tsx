@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/app/ui/components/button";
+import { Button } from "@/ui/components/button";
 import type { ComponentProps, ReactNode } from "react";
 
 interface LinkButtonProps extends ComponentProps<typeof Link> {

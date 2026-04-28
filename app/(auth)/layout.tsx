@@ -1,4 +1,4 @@
-import { quantico } from "../ui/fonts";
+import { quantico } from "@/ui/fonts";
 
 export default function AuthLayout({
   children,

@@ -1,9 +1,9 @@
-import { Button } from "@/app/ui/components/button";
-import { Card, CardContent, CardFooter } from "@/app/ui/components/card";
-import { Input } from "@/app/ui/components/input";
-import { Label } from "@/app/ui/components/label";
-import { LabelSeparator } from "@/app/ui/components/labelSeparator";
-import { LinkButton } from "@/app/ui/components/linkButton";
+import { Button } from "@/ui/components/button";
+import { Card, CardContent, CardFooter } from "@/ui/components/card";
+import { Input } from "@/ui/components/input";
+import { Label } from "@/ui/components/label";
+import { LabelSeparator } from "@/ui/components/labelSeparator";
+import { LinkButton } from "@/ui/components/linkButton";
 
 export default function Page() {
   return (
