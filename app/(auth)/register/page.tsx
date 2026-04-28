@@ -11,7 +11,7 @@ export default function Page() {
       <Card className="w-full !rounded-none !border-0 !shadow-none !ring-0">
         <CardContent>
           <div className="mt-6 flex flex-col gap-4">
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full" type="button">
               Sign up with Google
             </Button>
             <LabelSeparator>or</LabelSeparator>
