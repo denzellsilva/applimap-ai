@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Separator } from "@/app/ui/components/separator";
+import { Separator } from "@/ui/components/separator";
 
 export function LabelSeparator({ children }: { children: ReactNode }) {
   return (
