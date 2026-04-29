@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { Prisma } from "../app/generated/prisma/client";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 
@@ -58,7 +59,18 @@ export async function createUser(initialState: State, formData: FormData) {
       },
     });
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return {
+          errors: {
+            email: ["This email is already used."],
+          },
+        };
+      }
+    }
+
     console.error(error);
+
     return {
       message: "Database Error: Failed to Create User.",
     };
