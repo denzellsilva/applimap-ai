@@ -59,14 +59,15 @@ export async function createUser(initialState: State, formData: FormData) {
       },
     });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        return {
-          errors: {
-            email: ["This email is already used."],
-          },
-        };
-      }
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return {
+        errors: {
+          email: ["This email is already used."],
+        },
+      };
     }
 
     console.error(error);
