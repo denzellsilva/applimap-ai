@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import { Button } from "@/ui/components/button";
 import { Card, CardContent, CardFooter } from "@/ui/components/card";
 import { Input } from "@/ui/components/input";
