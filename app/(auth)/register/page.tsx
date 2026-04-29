@@ -1,13 +1,20 @@
+"use client";
+
+import { useActionState, useEffect } from "react";
 import { Button } from "@/ui/components/button";
 import { Card, CardContent, CardFooter } from "@/ui/components/card";
 import { Input } from "@/ui/components/input";
 import { Label } from "@/ui/components/label";
 import { LabelSeparator } from "@/ui/components/labelSeparator";
 import { LinkButton } from "@/ui/components/linkButton";
+import { createUser, State } from "@/actions/user";
+
+const initialState: State = { message: null, errors: {} };
 
 export default function Page() {
+  const [state, formAction] = useActionState(createUser, initialState);
   return (
-    <form>
+    <form action={formAction}>
       <Card className="w-full !rounded-none !border-0 !shadow-none !ring-0">
         <CardContent>
           <div className="mt-6 flex flex-col gap-4">
