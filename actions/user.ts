@@ -47,6 +47,18 @@ export async function createUser(initialState: State, formData: FormData) {
   const { firstName, lastName, email, password } = validatedFields.data;
 
   try {
+    const emailExists = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (emailExists) {
+      return {
+        errors: {
+          email: ["This email already is already used."],
+        },
+      };
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await prisma.user.create({
