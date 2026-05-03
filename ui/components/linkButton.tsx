@@ -14,7 +14,7 @@ export function LinkButton({
 }: LinkButtonProps) {
   return (
     <Link {...linkProps}>
-      <Button variant="link" className={className}>
+      <Button variant="link" className={className} type="button">
         {children}
       </Button>
     </Link>
