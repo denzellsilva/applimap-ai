@@ -12,13 +12,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized: async ({ auth, request: { nextUrl } }) => {
       const isLoggedIn = !!auth?.user;
-      const isOnOauth = nextUrl.pathname.startsWith("/oauth");
-      if (isOnOauth) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
+      const path = nextUrl.pathname;
+      const isAuthRoute = ["/login", "/register"].includes(path);
+      const isOauthRoute = path.startsWith("/oauth");
+
+      if (isLoggedIn && isAuthRoute) {
         return Response.redirect(new URL("/oauth", nextUrl));
       }
+
+      if (!isLoggedIn && isOauthRoute) {
+        return false;
+      }
+
       return true;
     },
   },

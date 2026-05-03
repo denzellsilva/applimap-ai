@@ -12,7 +12,7 @@ import { Input } from "@/ui/components/input";
 import { Label } from "@/ui/components/label";
 import { LabelSeparator } from "@/ui/components/labelSeparator";
 import { LinkButton } from "@/ui/components/linkButton";
-import { signIn } from "@/lib/auth";
+import { signIn } from "@/auth";
 
 export default function Page() {
   return (

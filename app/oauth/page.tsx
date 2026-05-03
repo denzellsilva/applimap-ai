@@ -1,5 +1,5 @@
 import { SignIn, SignOut } from "@/ui/components/auth";
-import { auth } from "@/lib/auth";
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 
 const Page = async () => {
