@@ -2,7 +2,7 @@ import { signIn } from "@/auth";
 
 interface OauthFormProps {
   id: string;
-  provider: string;
+  provider: "github" | "google";
 }
 
 export function OauthForm({ id, provider }: OauthFormProps) {
