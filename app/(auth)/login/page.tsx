@@ -12,7 +12,7 @@ import { Input } from "@/ui/components/input";
 import { Label } from "@/ui/components/label";
 import { LabelSeparator } from "@/ui/components/labelSeparator";
 import { LinkButton } from "@/ui/components/linkButton";
-import { signIn } from "@/auth";
+import { OauthForm } from "@/ui/components/oauthForm";
 
 export default function Page() {
   return (
@@ -48,8 +48,21 @@ export default function Page() {
               Login
             </Button>
             <LabelSeparator>or</LabelSeparator>
-            <Button form="github-oauth" variant="outline" className="w-full">
-              Login with GitHub
+            <Button
+              form="github-oauth"
+              type="submit"
+              variant="outline"
+              className="w-full"
+            >
+              Continue with GitHub
+            </Button>
+            <Button
+              form="google-oauth"
+              type="submit"
+              variant="outline"
+              className="w-full"
+            >
+              Continue with Google
             </Button>
             <div>
               <span>New to AppliMap? </span>
@@ -60,14 +73,8 @@ export default function Page() {
           </CardFooter>
         </Card>
       </form>
-      <form
-        action={async () => {
-          "use server";
-          await signIn("github");
-        }}
-        id="github-oauth"
-        className="hidden"
-      ></form>
+      <OauthForm id="github-oauth" provider="github"></OauthForm>
+      <OauthForm id="google-oauth" provider="google"></OauthForm>
     </>
   );
 }

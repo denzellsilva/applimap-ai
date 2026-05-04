@@ -16,9 +16,7 @@ const Page = async () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-black p-4">
       <div className="w-full max-w-xl rounded-lg bg-neutral-800 p-6">
-        <h1 className="mb-4 text-center text-xl text-white">
-          Auth.js + Prisma
-        </h1>
+        <h1 className="mb-4 text-center text-xl text-white">AppliMap AI</h1>
 
         {!session ? (
           <div className="text-center">
@@ -30,7 +28,7 @@ const Page = async () => {
               <p className="text-gray-300">Signed in as:</p>
               <p className="text-white">{session.user?.email}</p>
             </div>
-            <div className="text-center">
+            {/* <div className="text-center">
               <p className="text-gray-300">Data fetched from DB with Prisma:</p>
             </div>
             <div className="rounded bg-neutral-900 p-3">
@@ -39,7 +37,7 @@ const Page = async () => {
                 {" "}
                 {JSON.stringify(user, null, 2)}
               </pre>{" "}
-            </div>{" "}
+            </div>{" "} */}
             <div className="text-center">
               <SignOut />
             </div>
