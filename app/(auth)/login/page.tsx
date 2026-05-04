@@ -48,10 +48,20 @@ export default function Page() {
               Login
             </Button>
             <LabelSeparator>or</LabelSeparator>
-            <Button form="github-oauth" variant="outline" className="w-full">
+            <Button
+              form="github-oauth"
+              type="submit"
+              variant="outline"
+              className="w-full"
+            >
               Continue with GitHub
             </Button>
-            <Button form="google-oauth" variant="outline" className="w-full">
+            <Button
+              form="google-oauth"
+              type="submit"
+              variant="outline"
+              className="w-full"
+            >
               Continue with Google
             </Button>
             <div>
