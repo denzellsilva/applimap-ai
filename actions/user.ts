@@ -50,14 +50,14 @@ export async function createUser(initialState: State, formData: FormData) {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.user.create({
-      data: {
-        email,
-        firstName,
-        lastName,
-        password: hashedPassword,
-      },
-    });
+    // await prisma.user.create({
+    //   data: {
+    //     email,
+    //     firstName,
+    //     lastName,
+    //     password: hashedPassword,
+    //   },
+    // });
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&

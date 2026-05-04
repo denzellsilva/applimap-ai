@@ -7,14 +7,15 @@ import { Input } from "@/ui/components/input";
 import { Label } from "@/ui/components/label";
 import { LabelSeparator } from "@/ui/components/labelSeparator";
 import { LinkButton } from "@/ui/components/linkButton";
-import { createUser, State } from "@/actions/user";
+import { State } from "@/actions/user";
 
 const initialState: State = { message: null, errors: {} };
 
 export default function Page() {
-  const [state, formAction] = useActionState(createUser, initialState);
+  // const [state, formAction] = useActionState(createUser, initialState);
   return (
-    <form action={formAction}>
+    // <form action={formAction}>
+    <form>
       <Card className="w-full !rounded-none !border-0 !shadow-none !ring-0">
         <CardContent>
           <div className="mt-6 flex flex-col gap-4">
