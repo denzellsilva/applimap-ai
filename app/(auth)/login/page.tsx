@@ -12,12 +12,12 @@ import { Input } from "@/ui/components/input";
 import { Label } from "@/ui/components/label";
 import { LabelSeparator } from "@/ui/components/labelSeparator";
 import { LinkButton } from "@/ui/components/linkButton";
-import { OauthForm } from "@/ui/components/oauthForm";
+import { AuthForm } from "@/ui/components/authForm";
 
 export default function Page() {
   return (
     <>
-      <form>
+      <AuthForm provider="resend">
         <Card className="w-full !rounded-none !border-0 !shadow-none !ring-0">
           <CardHeader>
             <CardTitle>Welcome to AppliMap!</CardTitle>
@@ -36,10 +36,6 @@ export default function Page() {
                   placeholder="m@example.com"
                   required
                 />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" name="password" type="password" required />
               </div>
             </div>
           </CardContent>
@@ -72,9 +68,9 @@ export default function Page() {
             </div>
           </CardFooter>
         </Card>
-      </form>
-      <OauthForm id="github-oauth" provider="github"></OauthForm>
-      <OauthForm id="google-oauth" provider="google"></OauthForm>
+      </AuthForm>
+      <AuthForm id="github-oauth" provider="github"></AuthForm>
+      <AuthForm id="google-oauth" provider="google"></AuthForm>
     </>
   );
 }
