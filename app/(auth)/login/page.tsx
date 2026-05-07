@@ -22,7 +22,7 @@ export default function Page() {
           <CardHeader>
             <CardTitle>Welcome to AppliMap!</CardTitle>
             <CardDescription>
-              Enter your email and password below to login to your account
+              Enter your email below to login to your account
             </CardDescription>
           </CardHeader>
           <CardContent>
