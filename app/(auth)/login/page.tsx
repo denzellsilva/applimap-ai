@@ -22,7 +22,7 @@ export default function Page() {
           <CardHeader>
             <CardTitle>Welcome to AppliMap!</CardTitle>
             <CardDescription>
-              Enter your email below to login to your account
+              Enter your email below to sign in or create an account
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -41,7 +41,7 @@ export default function Page() {
           </CardContent>
           <CardFooter className="flex-col gap-2">
             <Button type="submit" className="w-full">
-              Login
+              Continue with Email
             </Button>
             <LabelSeparator>or</LabelSeparator>
             <Button
@@ -60,12 +60,6 @@ export default function Page() {
             >
               Continue with Google
             </Button>
-            <div>
-              <span>New to AppliMap? </span>
-              <LinkButton href="/register" className="px-0">
-                Create an Account
-              </LinkButton>
-            </div>
           </CardFooter>
         </Card>
       </AuthForm>
