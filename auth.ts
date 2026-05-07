@@ -7,7 +7,13 @@ import Resend from "next-auth/providers/resend";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [GitHub, Google, Resend],
+  providers: [
+    GitHub,
+    Google,
+    Resend({
+      from: "auth@applimap-ai.software",
+    }),
+  ],
   pages: {
     signIn: "/login",
   },
