@@ -1,13 +1,13 @@
 import { signIn } from "@/auth";
 import React from "react";
 
-interface OauthFormProps {
+interface AuthFormProps {
   id?: string;
   provider: "github" | "google" | "resend";
   children?: React.ReactNode;
 }
 
-export function AuthForm({ id, provider, children }: OauthFormProps) {
+export function AuthForm({ id, provider, children }: AuthFormProps) {
   return (
     <form
       action={async (formData) => {
