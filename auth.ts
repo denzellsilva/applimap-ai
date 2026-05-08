@@ -8,8 +8,8 @@ import Resend from "next-auth/providers/resend";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
-    GitHub,
-    Google,
+    GitHub({ allowDangerousEmailAccountLinking: true }),
+    Google({ allowDangerousEmailAccountLinking: true }),
     Resend({
       from: "auth@applimap-ai.software",
     }),
