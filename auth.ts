@@ -21,14 +21,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     authorized: async ({ auth, request: { nextUrl } }) => {
       const isLoggedIn = !!auth?.user;
       const path = nextUrl.pathname;
-      const isAuthRoute = ["/login", "/register"].includes(path);
-      const isOauthRoute = path.startsWith("/oauth");
+      const publicRoutes = ["/", "/login"];
+      const isPublicRoute = publicRoutes.includes(path);
 
-      if (isLoggedIn && isAuthRoute) {
+      if (isLoggedIn && isPublicRoute) {
         return Response.redirect(new URL("/oauth", nextUrl));
       }
 
-      if (!isLoggedIn && isOauthRoute) {
+      if (!isLoggedIn && !isPublicRoute) {
         return false;
       }
 
