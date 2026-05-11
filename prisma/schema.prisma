@@ -89,7 +89,7 @@ model JobApplication {
   id          String @id @default(cuid())
   title       String
   companyName String
-  status      Status
+  status      JobApplicationStatus
   location    String?
   description String?
   salaryRange String?
@@ -102,7 +102,7 @@ model JobApplication {
   updatedAt DateTime @updatedAt
 }
 
-enum Status {
+enum JobApplicationStatus {
   WISH_LIST
   APPLIED
   INTERVIEW
