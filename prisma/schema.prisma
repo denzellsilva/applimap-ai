@@ -23,6 +23,8 @@ model User {
   // Optional for WebAuthn support
   authenticator Authenticator[]
 
+  jobApplications JobApplication[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -81,4 +83,30 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
+}
+
+model JobApplication {
+  id          String @id @default(cuid())
+  title       String
+  companyName String
+  status      Status
+  location    String?
+  description String?
+  salaryRange String?
+  url         String?
+
+  userId      String
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Status {
+  WISH_LIST
+  APPLIED
+  INTERVIEW
+  OFFER
+  REJECTED
+  GHOSTED
 }
