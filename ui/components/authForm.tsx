@@ -8,14 +8,17 @@ interface AuthFormProps {
 }
 
 export function AuthForm({ id, provider, children }: AuthFormProps) {
+  const redirectTo = "/job-applications";
+
   return (
     <form
       action={async (formData) => {
         "use server";
         if (provider === "resend") {
+          formData.set("redirectTo", redirectTo);
           await signIn(provider, formData);
         } else {
-          await signIn(provider);
+          await signIn(provider, { redirectTo });
         }
       }}
       id={id}
