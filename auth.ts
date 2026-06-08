@@ -25,7 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const isPublicRoute = publicRoutes.includes(path);
 
       if (isLoggedIn && isPublicRoute) {
-        return Response.redirect(new URL("/oauth", nextUrl));
+        return Response.redirect(new URL("/job-applications", nextUrl));
       }
 
       if (!isLoggedIn && !isPublicRoute) {
