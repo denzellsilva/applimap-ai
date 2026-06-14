@@ -1,5 +1,3 @@
-import { Plus } from "lucide-react";
-
 import {
   Card,
   CardAction,
@@ -7,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/ui/components/card";
-import { Button } from "@/ui/components/button";
+import { AddJobSheet } from "@/ui/components/job-applications/add-job-sheet";
 
 const columns = [
   {
@@ -54,9 +52,7 @@ export default function Page() {
         <h1 className="text-2xl font-semibold">Job Applications</h1>
         <div className="flex items-center justify-between">
           <p className="my-0.5 text-gray-800">Track your job applications</p>
-          <Button size="sm">
-            <Plus className="mr-1.5 size-4" /> Add job
-          </Button>
+          <AddJobSheet />
         </div>
       </section>
 
