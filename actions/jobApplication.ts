@@ -9,39 +9,78 @@ import { z } from "zod";
 const jobApplicationSchema = z.object({
   title: z.string().min(1, "Title is required"),
   companyName: z.string().min(1, "Company name is required"),
-  status: z.nativeEnum(JobApplicationStatus),
+  status: z.enum(JobApplicationStatus),
   location: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   salaryRange: z.string().optional().nullable(),
-  url: z
-    .string()
-    .url("Must be a valid URL")
-    .optional()
-    .nullable()
-    .or(z.literal("")),
+  url: z.url("Must be a valid URL").optional().nullable().or(z.literal("")),
 });
 
-export type JobApplicationInput = z.infer<typeof jobApplicationSchema>;
+export interface State {
+  errors?: {
+    title?: string[];
+    companyName?: string[];
+    status?: string[];
+    location?: string[];
+    description?: string[];
+    salaryRange?: string[];
+    url?: string[];
+  };
+  message?: string | null;
+}
 
 // CREATE
-export async function createJobApplication(data: JobApplicationInput) {
+export async function createJobApplication(
+  prevState: State,
+  formData: FormData,
+) {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
 
-  const validatedData = jobApplicationSchema.parse(data);
+  const validatedFields = jobApplicationSchema.safeParse({
+    title: formData.get("title"),
+    companyName: formData.get("companyName"),
+    status: formData.get("status"),
+    location: formData.get("location"),
+    description: formData.get("description"),
+    salaryRange: formData.get("salaryRange"),
+    url: formData.get("url"),
+  });
 
-  const jobApplication = await prisma.jobApplication.create({
+  if (!validatedFields.success) {
+    return {
+      errors: z.flattenError(validatedFields.error).fieldErrors,
+      message: "Invalid User",
+    };
+  }
+
+  const {
+    title,
+    companyName,
+    status,
+    location,
+    description,
+    salaryRange,
+    url,
+  } = validatedFields.data;
+
+  await prisma.jobApplication.create({
     data: {
-      ...validatedData,
-      url: validatedData.url === "" ? null : validatedData.url,
+      title,
+      companyName,
+      status,
+      location,
+      description,
+      salaryRange,
+      url,
       userId: session.user.id,
     },
   });
 
   revalidatePath("/applications");
-  return jobApplication;
+  return { message: "Job application added successfully" };
 }
 
 // READ (All for current user)
@@ -99,15 +138,15 @@ export async function updateJobApplication(
     throw new Error("Job application not found or unauthorized");
   }
 
-  const validatedData = jobApplicationSchema.partial().parse(data);
+  const validatedFields = jobApplicationSchema.partial().parse(data);
 
   const updatedJobApplication = await prisma.jobApplication.update({
     where: {
       id,
     },
     data: {
-      ...validatedData,
-      url: validatedData.url === "" ? null : validatedData.url,
+      ...validatedFields,
+      url: validatedFields.url === "" ? null : validatedFields.url,
     },
   });
 
