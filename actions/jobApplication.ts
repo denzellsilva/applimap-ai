@@ -3,13 +3,12 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
-import { JobApplicationStatus } from "../app/generated/prisma/client";
 import { z } from "zod";
 
 const jobApplicationSchema = z.object({
   title: z.string().min(1, "Title is required"),
   companyName: z.string().min(1, "Company name is required"),
-  status: z.enum(JobApplicationStatus),
+  status: z.enum(["WISH_LIST", "APPLIED", "INTERVIEW", "OFFER", "REJECTED"]),
   location: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   salaryRange: z.string().optional().nullable(),
@@ -84,99 +83,99 @@ export async function createJobApplication(
 }
 
 // READ (All for current user)
-export async function getJobApplications() {
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
+// export async function getJobApplications() {
+//   const session = await auth();
+//   if (!session?.user?.id) {
+//     throw new Error("Unauthorized");
+//   }
 
-  const jobApplications = await prisma.jobApplication.findMany({
-    where: {
-      userId: session.user.id,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+//   const jobApplications = await prisma.jobApplication.findMany({
+//     where: {
+//       userId: session.user.id,
+//     },
+//     orderBy: {
+//       createdAt: "desc",
+//     },
+//   });
 
-  return jobApplications;
-}
+//   return jobApplications;
+// }
 
 // READ (Single by ID)
-export async function getJobApplicationById(id: string) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
+// export async function getJobApplicationById(id: string) {
+//   const session = await auth();
+//   if (!session?.user?.id) {
+//     throw new Error("Unauthorized");
+//   }
 
-  const jobApplication = await prisma.jobApplication.findUnique({
-    where: {
-      id,
-      userId: session.user.id, // Ensure user owns the application
-    },
-  });
+//   const jobApplication = await prisma.jobApplication.findUnique({
+//     where: {
+//       id,
+//       userId: session.user.id, // Ensure user owns the application
+//     },
+//   });
 
-  return jobApplication;
-}
+//   return jobApplication;
+// }
 
 // UPDATE
-export async function updateJobApplication(
-  id: string,
-  data: Partial<JobApplicationInput>,
-) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
+// export async function updateJobApplication(
+//   id: string,
+//   data: Partial<JobApplicationInput>,
+// ) {
+//   const session = await auth();
+//   if (!session?.user?.id) {
+//     throw new Error("Unauthorized");
+//   }
 
-  // Verify ownership
-  const existingApp = await prisma.jobApplication.findUnique({
-    where: { id },
-  });
+// Verify ownership
+//   const existingApp = await prisma.jobApplication.findUnique({
+//     where: { id },
+//   });
 
-  if (!existingApp || existingApp.userId !== session.user.id) {
-    throw new Error("Job application not found or unauthorized");
-  }
+//   if (!existingApp || existingApp.userId !== session.user.id) {
+//     throw new Error("Job application not found or unauthorized");
+//   }
 
-  const validatedFields = jobApplicationSchema.partial().parse(data);
+//   const validatedFields = jobApplicationSchema.partial().parse(data);
 
-  const updatedJobApplication = await prisma.jobApplication.update({
-    where: {
-      id,
-    },
-    data: {
-      ...validatedFields,
-      url: validatedFields.url === "" ? null : validatedFields.url,
-    },
-  });
+//   const updatedJobApplication = await prisma.jobApplication.update({
+//     where: {
+//       id,
+//     },
+//     data: {
+//       ...validatedFields,
+//       url: validatedFields.url === "" ? null : validatedFields.url,
+//     },
+//   });
 
-  revalidatePath("/applications");
-  revalidatePath(`/applications/${id}`);
-  return updatedJobApplication;
-}
+//   revalidatePath("/applications");
+//   revalidatePath(`/applications/${id}`);
+//   return updatedJobApplication;
+// }
 
 // DELETE
-export async function deleteJobApplication(id: string) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
+// export async function deleteJobApplication(id: string) {
+//   const session = await auth();
+//   if (!session?.user?.id) {
+//     throw new Error("Unauthorized");
+//   }
 
-  // Verify ownership
-  const existingApp = await prisma.jobApplication.findUnique({
-    where: { id },
-  });
+//   // Verify ownership
+//   const existingApp = await prisma.jobApplication.findUnique({
+//     where: { id },
+//   });
 
-  if (!existingApp || existingApp.userId !== session.user.id) {
-    throw new Error("Job application not found or unauthorized");
-  }
+//   if (!existingApp || existingApp.userId !== session.user.id) {
+//     throw new Error("Job application not found or unauthorized");
+//   }
 
-  await prisma.jobApplication.delete({
-    where: {
-      id,
-    },
-  });
+//   await prisma.jobApplication.delete({
+//     where: {
+//       id,
+//     },
+//   });
 
-  revalidatePath("/applications");
-  return { success: true };
-}
+//   revalidatePath("/applications");
+//   return { success: true };
+// }
