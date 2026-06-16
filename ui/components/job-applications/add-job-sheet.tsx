@@ -22,7 +22,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/components/select";
+import { useActionState } from "react";
+import { State, createJobApplication } from "@/actions/jobApplication";
+
+const initialState: State = { message: null, errors: {} };
+
 export function AddJobSheet() {
+  const [state, formAction, pending] = useActionState(
+    createJobApplication,
+    initialState,
+  );
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -41,6 +51,7 @@ export function AddJobSheet() {
         <form
           className="flex flex-1 flex-col space-y-4 overflow-y-auto px-4"
           id="create-job-application"
+          action={formAction}
         >
           <FieldGroup className="md:grid md:grid-cols-2 md:gap-6">
             <Field>
@@ -114,7 +125,11 @@ export function AddJobSheet() {
           </Field>
         </form>
         <SheetFooter>
-          <Button type="submit" form="create-job-applicaton">
+          <Button
+            type="submit"
+            form="create-job-application"
+            disabled={pending}
+          >
             Save Job Application
           </Button>
           <SheetClose asChild>
