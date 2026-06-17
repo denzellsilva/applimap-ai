@@ -51,7 +51,7 @@ export async function createJobApplication(
   if (!validatedFields.success) {
     return {
       errors: z.flattenError(validatedFields.error).fieldErrors,
-      message: "Invalid User",
+      message: "Invalid job application",
     };
   }
 

@@ -14,7 +14,12 @@ import {
 import { Button } from "@/ui/components/button";
 import { Input } from "@/ui/components/input";
 import { Textarea } from "@/ui/components/textarea";
-import { Field, FieldGroup, FieldLabel } from "@/ui/components/field";
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldError,
+} from "@/ui/components/field";
 import {
   Select,
   SelectContent,
@@ -22,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/components/select";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { State, createJobApplication } from "@/actions/jobApplication";
 
 const initialState: State = { message: null, errors: {} };
@@ -54,29 +59,41 @@ export function AddJobSheet() {
           action={formAction}
         >
           <FieldGroup className="md:grid md:grid-cols-2 md:gap-6">
-            <Field>
+            <Field data-invalid={state.errors?.title ? true : false}>
               <FieldLabel htmlFor="title">Job Title *</FieldLabel>
               <Input
                 id="title"
                 name="title"
                 required
                 placeholder="e.g. Software Engineer"
+                aria-invalid={state.errors?.title ? true : false}
               />
+              {state.errors?.title && (
+                <FieldError>{state.errors.title[0]}</FieldError>
+              )}
             </Field>
 
-            <Field>
+            <Field data-invalid={state.errors?.companyName ? true : false}>
               <FieldLabel htmlFor="companyName">Company Name *</FieldLabel>
               <Input
                 id="companyName"
                 name="companyName"
                 required
                 placeholder="e.g. Acme Corp"
+                aria-invalid={state.errors?.companyName ? true : false}
               />
+              {state.errors?.companyName && (
+                <FieldError>{state.errors?.companyName[0]}</FieldError>
+              )}
             </Field>
 
-            <Field>
+            <Field data-invalid={state.errors?.status ? true : false}>
               <FieldLabel htmlFor="status">Status</FieldLabel>
-              <Select name="status" defaultValue="WISH_LIST">
+              <Select
+                name="status"
+                defaultValue="WISH_LIST"
+                aria-invalid={state.errors?.status ? true : false}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
@@ -88,40 +105,67 @@ export function AddJobSheet() {
                   <SelectItem value="REJECTED">Rejected</SelectItem>
                 </SelectContent>
               </Select>
+              {state.errors?.status && (
+                <FieldError>{state.errors.status[0]}</FieldError>
+              )}
             </Field>
 
-            <Field>
+            <Field data-invalid={state.errors?.location ? true : false}>
               <FieldLabel htmlFor="location">Location</FieldLabel>
               <Input
                 id="location"
                 name="location"
                 placeholder="e.g. Remote, New York, etc."
+                aria-invalid={state.errors?.location ? true : false}
               />
+              {state.errors?.location && (
+                <FieldError>{state.errors.location[0]}</FieldError>
+              )}
             </Field>
 
-            <Field>
+            <Field data-invalid={state.errors?.salaryRange ? true : false}>
               <FieldLabel htmlFor="salaryRange">Salary Range</FieldLabel>
               <Input
                 id="salaryRange"
                 name="salaryRange"
                 placeholder="e.g. $100k - $120k"
+                aria-invalid={state.errors?.salaryRange ? true : false}
               />
+              {state.errors?.salaryRange && (
+                <FieldError>{state.errors.salaryRange[0]}</FieldError>
+              )}
             </Field>
 
-            <Field>
+            <Field data-invalid={state.errors?.url ? true : false}>
               <FieldLabel htmlFor="url">Job Posting URL</FieldLabel>
-              <Input id="url" name="url" type="url" placeholder="https://..." />
+              <Input
+                id="url"
+                name="url"
+                type="url"
+                placeholder="https://..."
+                aria-invalid={state.errors?.url ? true : false}
+              />
+              {state.errors?.url && (
+                <FieldError>{state.errors.url[0]}</FieldError>
+              )}
             </Field>
           </FieldGroup>
 
-          <Field className="flex-1">
+          <Field
+            className="flex-1"
+            data-invalid={state.errors?.description ? true : false}
+          >
             <FieldLabel htmlFor="description">Description or Notes</FieldLabel>
             <Textarea
               id="description"
               name="description"
               className="resize-none"
               placeholder="Any details about the job, requirements, etc."
+              aria-invalid={state.errors?.description ? true : false}
             />
+            {state.errors?.description && (
+              <FieldError>{state.errors.description[0]}</FieldError>
+            )}
           </Field>
         </form>
         <SheetFooter>
