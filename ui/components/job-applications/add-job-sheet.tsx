@@ -64,6 +64,7 @@ export function AddJobSheet() {
               <Input
                 id="title"
                 name="title"
+                defaultValue={state.fields?.title || ""}
                 required
                 placeholder="e.g. Software Engineer"
                 aria-invalid={state.errors?.title ? true : false}
@@ -78,6 +79,7 @@ export function AddJobSheet() {
               <Input
                 id="companyName"
                 name="companyName"
+                defaultValue={state.fields?.companyName || ""}
                 required
                 placeholder="e.g. Acme Corp"
                 aria-invalid={state.errors?.companyName ? true : false}
@@ -91,7 +93,7 @@ export function AddJobSheet() {
               <FieldLabel htmlFor="status">Status</FieldLabel>
               <Select
                 name="status"
-                defaultValue="WISH_LIST"
+                defaultValue={state.fields?.title || "WISH_LIST"}
                 aria-invalid={state.errors?.status ? true : false}
               >
                 <SelectTrigger>
@@ -115,6 +117,7 @@ export function AddJobSheet() {
               <Input
                 id="location"
                 name="location"
+                defaultValue={state.fields?.location || ""}
                 placeholder="e.g. Remote, New York, etc."
                 aria-invalid={state.errors?.location ? true : false}
               />
@@ -141,6 +144,7 @@ export function AddJobSheet() {
               <Input
                 id="url"
                 name="url"
+                defaultValue={state.fields?.url || ""}
                 type="url"
                 placeholder="https://..."
                 aria-invalid={state.errors?.url ? true : false}
@@ -159,6 +163,7 @@ export function AddJobSheet() {
             <Textarea
               id="description"
               name="description"
+              defaultValue={state.fields?.description || ""}
               className="resize-none"
               placeholder="Any details about the job, requirements, etc."
               aria-invalid={state.errors?.description ? true : false}

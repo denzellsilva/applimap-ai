@@ -26,6 +26,15 @@ export interface State {
     url?: string[];
   };
   message?: string | null;
+  fields?: {
+    title?: string;
+    companyName?: string;
+    status?: string;
+    location?: string;
+    description?: string;
+    salaryRange?: string;
+    url?: string;
+  };
 }
 
 // CREATE
@@ -38,20 +47,23 @@ export async function createJobApplication(
     throw new Error("Unauthorized");
   }
 
-  const validatedFields = jobApplicationSchema.safeParse({
-    title: formData.get("title"),
-    companyName: formData.get("companyName"),
-    status: formData.get("status"),
-    location: formData.get("location"),
-    description: formData.get("description"),
-    salaryRange: formData.get("salaryRange"),
-    url: formData.get("url"),
-  });
+  const rawFields = {
+    title: formData.get("title") as string,
+    companyName: formData.get("companyName") as string,
+    status: formData.get("status") as string,
+    location: formData.get("location") as string,
+    description: formData.get("description") as string,
+    salaryRange: formData.get("salaryRange") as string,
+    url: formData.get("url") as string,
+  };
+
+  const validatedFields = jobApplicationSchema.safeParse(rawFields);
 
   if (!validatedFields.success) {
     return {
       errors: z.flattenError(validatedFields.error).fieldErrors,
       message: "Invalid job application",
+      fields: rawFields,
     };
   }
 
@@ -65,18 +77,25 @@ export async function createJobApplication(
     url,
   } = validatedFields.data;
 
-  await prisma.jobApplication.create({
-    data: {
-      title,
-      companyName,
-      status,
-      location,
-      description,
-      salaryRange,
-      url,
-      userId: session.user.id,
-    },
-  });
+  try {
+    await prisma.jobApplication.create({
+      data: {
+        title,
+        companyName,
+        status,
+        location,
+        description,
+        salaryRange,
+        url,
+        userId: session.user.id,
+      },
+    });
+  } catch (error) {
+    return {
+      message: "Database error: Failed to save application.",
+      fields: rawFields,
+    };
+  }
 
   revalidatePath("/applications");
   return { message: "Job application added successfully" };
