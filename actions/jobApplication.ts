@@ -102,23 +102,28 @@ export async function createJobApplication(
 }
 
 // READ (All for current user)
-// export async function getJobApplications() {
-//   const session = await auth();
-//   if (!session?.user?.id) {
-//     throw new Error("Unauthorized");
-//   }
+export async function getJobApplications() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
 
-//   const jobApplications = await prisma.jobApplication.findMany({
-//     where: {
-//       userId: session.user.id,
-//     },
-//     orderBy: {
-//       createdAt: "desc",
-//     },
-//   });
+  const jobApplications = await prisma.jobApplication.findMany({
+    where: {
+      userId: session.user.id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
-//   return jobApplications;
-// }
+  const groupedJobApplications = Object.groupBy(
+    jobApplications,
+    ({ status }) => status,
+  );
+
+  return groupedJobApplications;
+}
 
 // READ (Single by ID)
 // export async function getJobApplicationById(id: string) {
