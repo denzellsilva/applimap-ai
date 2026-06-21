@@ -91,12 +91,10 @@ export function AddJobSheet() {
 
             <Field data-invalid={state.errors?.status ? true : false}>
               <FieldLabel htmlFor="status">Status</FieldLabel>
-              <Select
-                name="status"
-                defaultValue={state.fields?.title || "WISH_LIST"}
-                aria-invalid={state.errors?.status ? true : false}
-              >
-                <SelectTrigger>
+              <Select name="status" defaultValue={state.fields?.status}>
+                <SelectTrigger
+                  aria-invalid={state.errors?.status ? true : false}
+                >
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
