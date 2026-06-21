@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/components/select";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import { State, createJobApplication } from "@/actions/jobApplication";
 
 const initialState: State = { message: null, errors: {} };
