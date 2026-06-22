@@ -1,5 +1,7 @@
 import { AddJobSheet } from "@/ui/components/job-applications/add-job-sheet";
 import { Kanban } from "@/ui/components/job-applications/kanban";
+import { Suspense } from "react";
+import { KanbanSkeleton } from "@/ui/components/job-applications/kanban-skeleton";
 
 export default function Page() {
   return (
@@ -13,7 +15,9 @@ export default function Page() {
       </section>
 
       <section className="flex flex-1 gap-4 overflow-x-auto pt-1 pb-4">
-        <Kanban />
+        <Suspense fallback={<KanbanSkeleton />}>
+          <Kanban />
+        </Suspense>
       </section>
     </div>
   );
