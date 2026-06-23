@@ -1,7 +1,6 @@
 import { Button } from "@/ui/components/button";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -12,6 +11,9 @@ import { Input } from "@/ui/components/input";
 import { Label } from "@/ui/components/label";
 import { LabelSeparator } from "@/ui/components/labelSeparator";
 import { AuthForm } from "@/ui/components/authForm";
+import { Mail } from "lucide-react";
+import { Google } from "@/ui/components/login/google";
+import { GitHub } from "@/ui/components/login/github";
 
 export default function Page() {
   return (
@@ -40,24 +42,27 @@ export default function Page() {
           </CardContent>
           <CardFooter className="flex-col gap-2">
             <Button type="submit" className="w-full">
+              <Mail />
               Continue with Email
             </Button>
             <LabelSeparator>or</LabelSeparator>
-            <Button
-              form="github-oauth"
-              type="submit"
-              variant="outline"
-              className="w-full"
-            >
-              Continue with GitHub
-            </Button>
             <Button
               form="google-oauth"
               type="submit"
               variant="outline"
               className="w-full"
             >
+              <Google />
               Continue with Google
+            </Button>
+            <Button
+              form="github-oauth"
+              type="submit"
+              variant="outline"
+              className="w-full"
+            >
+              <GitHub />
+              Continue with GitHub
             </Button>
           </CardFooter>
         </Card>
