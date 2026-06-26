@@ -18,6 +18,7 @@ import { Google } from "@/ui/components/login/google";
 import { GitHub } from "@/ui/components/login/github";
 import { useState } from "react";
 import { Spinner } from "@/ui/components/spinner";
+import { Field, FieldError, FieldLabel } from "@/ui/components/field";
 
 interface OAuthButtonConfig {
   provider: Exclude<AuthProvider, "resend">;
@@ -47,59 +48,64 @@ export default function Page() {
   return (
     <>
       <AuthForm provider="resend" setPendingButton={setPendingButton}>
-        <Card className="w-full !rounded-none !border-0 !shadow-none !ring-0">
-          <CardHeader>
-            <CardTitle>Welcome to AppliMap!</CardTitle>
-            <CardDescription>
-              Enter your email below to sign in or create an account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+        {(state) => (
+          <Card className="w-full !rounded-none !border-0 !shadow-none !ring-0">
+            <CardHeader>
+              <CardTitle>Welcome to AppliMap!</CardTitle>
+              <CardDescription>
+                Enter your email below to sign in or create an account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Field data-invalid={state.errors?.email ? true : false}>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
                   name="email"
-                  // type="email"
-                  placeholder="m@example.com"
-                  // required
+                  type="email"
+                  defaultValue={state.fields?.email || ""}
+                  placeholder="e.g. Software Engineer"
+                  aria-invalid={state.errors?.email ? true : false}
+                  required
                 />
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex-col gap-2">
-            <Button type="submit" className="w-full">
-              {pendingButton === "resend" ? (
-                <Spinner />
-              ) : (
-                <>
-                  <Mail />
-                  Continue with Email{" "}
-                </>
-              )}
-            </Button>
-            <LabelSeparator>or</LabelSeparator>
-            {OAUTH_PROVIDERS.map(({ provider, formId, label, icon }) => (
-              <Button
-                key={provider}
-                form={formId}
-                type="submit"
-                variant="outline"
-                className="w-full"
-              >
-                {pendingButton === provider ? (
+                {state.errors?.email && (
+                  <FieldError>{state.errors.email[0]}</FieldError>
+                )}
+              </Field>
+            </CardContent>
+            <CardFooter className="flex-col gap-2">
+              <Button type="submit" className="w-full">
+                {pendingButton === "resend" ? (
                   <Spinner />
                 ) : (
                   <>
-                    {icon}
-                    {label}
+                    <Mail />
+                    Continue with Email{" "}
                   </>
                 )}
               </Button>
-            ))}
-          </CardFooter>
-        </Card>
+              <LabelSeparator>or</LabelSeparator>
+              {OAUTH_PROVIDERS.map(({ provider, formId, label, icon }) => (
+                <Button
+                  key={provider}
+                  form={formId}
+                  type="submit"
+                  variant="outline"
+                  className="w-full"
+                >
+                  {pendingButton === provider ? (
+                    <Spinner />
+                  ) : (
+                    <>
+                      {icon}
+                      {label}
+                    </>
+                  )}
+                </Button>
+              ))}
+            </CardFooter>
+          </Card>
+        )}
       </AuthForm>
       {OAUTH_PROVIDERS.map(({ provider, formId }) => (
         <AuthForm

@@ -1,4 +1,3 @@
-// @/app/actions/auth.ts
 "use server";
 
 import { signIn } from "@/auth";
@@ -13,6 +12,9 @@ export interface State {
     email?: string[];
   };
   message?: string | null;
+  fields?: {
+    email?: string;
+  };
 }
 
 export async function signInAction(
@@ -33,6 +35,7 @@ export async function signInAction(
       return {
         errors: z.flattenError(validatedFields.error).fieldErrors,
         message: "Invalid account",
+        fields: rawFields,
       };
     }
   }
