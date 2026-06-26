@@ -29,9 +29,7 @@ export function AuthForm({
   );
 
   useEffect(() => {
-    if (pending) {
-      setPendingButton?.(provider);
-    }
+    setPendingButton?.(pending ? provider : null);
   }, [pending, provider, setPendingButton]);
 
   return (
