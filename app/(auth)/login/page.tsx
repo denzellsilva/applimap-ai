@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/ui/components/button";
 import {
   Card,
@@ -10,15 +12,41 @@ import {
 import { Input } from "@/ui/components/input";
 import { Label } from "@/ui/components/label";
 import { LabelSeparator } from "@/ui/components/labelSeparator";
-import { AuthForm } from "@/ui/components/authForm";
+import { AuthForm, AuthProvider } from "@/ui/components/login/authForm";
 import { Mail } from "lucide-react";
 import { Google } from "@/ui/components/login/google";
 import { GitHub } from "@/ui/components/login/github";
+import { useState } from "react";
+import { Spinner } from "@/ui/components/spinner";
+
+interface OAuthButtonConfig {
+  provider: Exclude<AuthProvider, "resend">;
+  formId: string;
+  label: string;
+  icon: React.ReactNode;
+}
+
+const OAUTH_PROVIDERS: OAuthButtonConfig[] = [
+  {
+    provider: "google",
+    formId: "google-oauth",
+    label: "Continue with Google",
+    icon: <Google />,
+  },
+  {
+    provider: "github",
+    formId: "github-oauth",
+    label: "Continue with GitHub",
+    icon: <GitHub />,
+  },
+];
 
 export default function Page() {
+  const [pendingButton, setPendingButton] = useState<AuthProvider | null>(null);
+
   return (
     <>
-      <AuthForm provider="resend">
+      <AuthForm provider="resend" setPendingButton={setPendingButton}>
         <Card className="w-full !rounded-none !border-0 !shadow-none !ring-0">
           <CardHeader>
             <CardTitle>Welcome to AppliMap!</CardTitle>
@@ -33,42 +61,54 @@ export default function Page() {
                 <Input
                   id="email"
                   name="email"
-                  type="email"
+                  // type="email"
                   placeholder="m@example.com"
-                  required
+                  // required
                 />
               </div>
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-2">
             <Button type="submit" className="w-full">
-              <Mail />
-              Continue with Email
+              {pendingButton === "resend" ? (
+                <Spinner />
+              ) : (
+                <>
+                  <Mail />
+                  Continue with Email{" "}
+                </>
+              )}
             </Button>
             <LabelSeparator>or</LabelSeparator>
-            <Button
-              form="google-oauth"
-              type="submit"
-              variant="outline"
-              className="w-full"
-            >
-              <Google />
-              Continue with Google
-            </Button>
-            <Button
-              form="github-oauth"
-              type="submit"
-              variant="outline"
-              className="w-full"
-            >
-              <GitHub />
-              Continue with GitHub
-            </Button>
+            {OAUTH_PROVIDERS.map(({ provider, formId, label, icon }) => (
+              <Button
+                key={provider}
+                form={formId}
+                type="submit"
+                variant="outline"
+                className="w-full"
+              >
+                {pendingButton === provider ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    {icon}
+                    {label}
+                  </>
+                )}
+              </Button>
+            ))}
           </CardFooter>
         </Card>
       </AuthForm>
-      <AuthForm id="github-oauth" provider="github"></AuthForm>
-      <AuthForm id="google-oauth" provider="google"></AuthForm>
+      {OAUTH_PROVIDERS.map(({ provider, formId }) => (
+        <AuthForm
+          key={provider}
+          id={formId}
+          provider={provider}
+          setPendingButton={setPendingButton}
+        />
+      ))}
     </>
   );
 }
