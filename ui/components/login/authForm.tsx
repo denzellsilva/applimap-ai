@@ -10,7 +10,7 @@ interface AuthFormProps {
   id?: string;
   provider: AuthProvider;
   setPendingButton?: Dispatch<SetStateAction<AuthProvider | null>>;
-  children?: React.ReactNode;
+  children?: React.ReactNode | ((state: State) => React.ReactNode);
 }
 
 const initialState: State = { message: null, errors: {} };
@@ -41,7 +41,7 @@ export function AuthForm({
         id={id}
         className={!children ? "hidden" : undefined}
       >
-        {children}
+        {typeof children === "function" ? children(state) : children}
       </form>
     </>
   );
