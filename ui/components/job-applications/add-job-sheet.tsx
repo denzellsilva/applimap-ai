@@ -27,19 +27,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/components/select";
-import { useActionState } from "react";
+import { useActionState, useState, useEffect, startTransition } from "react";
 import { State, createJobApplication } from "@/actions/jobApplication";
 
 const initialState: State = { message: null, errors: {} };
 
 export function AddJobSheet() {
+  const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState(
     createJobApplication,
     initialState,
   );
 
+  useEffect(() => {
+    if (state.message === "Job application added successfully") {
+      startTransition(() => {
+        setOpen(false);
+      });
+    }
+  }, [state, setOpen]);
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button size="sm">
           <Plus className="mr-1.5 size-4" /> Add job
