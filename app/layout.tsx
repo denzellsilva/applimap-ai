@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { inter } from "@/ui/fonts";
 import "@/ui/globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/ui/components/sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +19,10 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full", "antialiased", "font-sans", inter.variable)}
     >
-      <body>{children}</body>
+      <body>
+        <Toaster />
+        {children}
+      </body>
     </html>
   );
 }

@@ -29,6 +29,8 @@ import {
 } from "@/ui/components/select";
 import { useActionState, useState, useEffect, startTransition } from "react";
 import { State, createJobApplication } from "@/actions/jobApplication";
+import { toast } from "sonner";
+import { Spinner } from "@/ui/components/spinner";
 
 const initialState: State = { message: null, errors: {} };
 
@@ -44,6 +46,8 @@ export function AddJobSheet() {
       startTransition(() => {
         setOpen(false);
       });
+
+      toast.success(state.message, { position: "top-center" });
     }
   }, [state, setOpen]);
 
@@ -186,7 +190,7 @@ export function AddJobSheet() {
             form="create-job-application"
             disabled={pending}
           >
-            Save Job Application
+            {pending ? <Spinner /> : "Save Job Application"}
           </Button>
           <SheetClose asChild>
             <Button type="button" variant="outline">
