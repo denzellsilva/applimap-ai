@@ -64,7 +64,7 @@ export default function Page() {
                   name="email"
                   type="email"
                   defaultValue={state.fields?.email || ""}
-                  placeholder="e.g. Software Engineer"
+                  placeholder="m@example.com"
                   aria-invalid={state.errors?.email ? true : false}
                   required
                 />
