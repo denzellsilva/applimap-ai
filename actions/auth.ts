@@ -17,7 +17,7 @@ export interface State {
   };
 }
 
-export async function signInAction(
+export async function authenticate(
   provider: string,
   prevState: State,
   formData: FormData,

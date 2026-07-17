@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { State, signInAction } from "@/actions/auth";
+import { State, authenticate } from "@/actions/auth";
 import { useActionState, useEffect, Dispatch, SetStateAction } from "react";
 
 export type AuthProvider = "github" | "google" | "resend";
@@ -21,7 +21,7 @@ export function AuthForm({
   setPendingButton,
   children,
 }: AuthFormProps) {
-  const singInWithProvider = signInAction.bind(null, provider);
+  const singInWithProvider = authenticate.bind(null, provider);
 
   const [state, formAction, pending] = useActionState(
     singInWithProvider,
