@@ -94,8 +94,9 @@ export async function createJobApplication(
       },
     });
   } catch (error) {
+    console.error(`Database Error: ${error}`);
     return {
-      message: "Database error: Failed to save application.",
+      message: "Database Error: Failed to save application.",
       fields: rawFields,
     };
   }
@@ -111,21 +112,26 @@ export async function getJobApplications() {
     throw new Error("Unauthorized");
   }
 
-  const jobApplications = await prisma.jobApplication.findMany({
-    where: {
-      userId: session.user.id,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  try {
+    const jobApplications = await prisma.jobApplication.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-  const groupedJobApplications = Object.groupBy(
-    jobApplications,
-    ({ status }) => status,
-  );
+    const groupedJobApplications = Object.groupBy(
+      jobApplications,
+      ({ status }) => status,
+    );
 
-  return groupedJobApplications;
+    return groupedJobApplications;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to get job applications.");
+  }
 }
 
 // READ (Single by ID)
