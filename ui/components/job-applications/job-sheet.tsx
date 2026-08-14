@@ -27,15 +27,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/components/select";
-import { useActionState, useState, useEffect, startTransition } from "react";
+import { useActionState, useEffect, startTransition } from "react";
 import { State, createJobApplication } from "@/actions/jobApplication";
 import { toast } from "sonner";
 import { Spinner } from "@/ui/components/spinner";
+import {
+  useOpenSheet,
+  useSetOpenSheet,
+} from "@/ui/components/job-applications/job-application-context";
 
 const initialState: State = { message: null, errors: {} };
 
-export function AddJobSheet() {
-  const [open, setOpen] = useState(false);
+export function JobSheet() {
+  const open = useOpenSheet();
+  const setOpen = useSetOpenSheet();
   const [state, formAction, pending] = useActionState(
     createJobApplication,
     initialState,

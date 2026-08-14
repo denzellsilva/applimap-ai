@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Card } from "@/ui/components/card";
+import { useSetOpenSheet } from "@/ui/components/job-applications/job-application-context";
 
 interface ApplicationCardProps {
   id: string;
@@ -13,10 +14,16 @@ export function ApplicationCard({
   title,
   companyName,
 }: ApplicationCardProps) {
-  const handleClick = () => console.log(id);
+  const setOpen = useSetOpenSheet();
+
+  const handleClick = () => {
+    setOpen(true);
+    console.log(id);
+  };
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
+      setOpen(true);
       console.log(id);
     }
   };
