@@ -7,6 +7,7 @@ import {
 } from "@/ui/components/card";
 import { columns } from "@/ui/job-applications/kanban-styles";
 import { getJobApplications } from "@/actions/jobApplication";
+import { ApplicationCard } from "@/ui/components/job-applications/application-card";
 
 export async function Kanban() {
   const jobs = await getJobApplications();
@@ -41,13 +42,7 @@ export async function Kanban() {
         <CardContent className="no-scrollbar flex-1 space-y-3 overflow-y-auto p-3">
           {/* Mapping through inner applications */}
           {applicationsInColumn.map((job) => (
-            <Card
-              key={job.id}
-              className="gap-0 rounded-md bg-white p-3 shadow-sm"
-            >
-              <h4 className="text-sm font-semibold">{job.title}</h4>
-              <p className="text-muted-foreground text-xs">{job.companyName}</p>
-            </Card>
+            <ApplicationCard key={job.id} {...job} />
           ))}
 
           <Card className="text-muted-foreground flex min-h-[100px] cursor-pointer items-center justify-center border-2 border-dashed border-black/10 bg-transparent p-6 text-center shadow-none transition-colors hover:border-black/20 hover:bg-black/5">
