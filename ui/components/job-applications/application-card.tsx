@@ -34,7 +34,7 @@ export function ApplicationCard({
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      className="gap-0 rounded-md bg-white p-3 shadow-sm"
+      className="cursor-pointer gap-0 rounded-md bg-white p-3 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
     >
       <h4 className="text-sm font-semibold">{title}</h4>
       <p className="text-muted-foreground text-xs">
