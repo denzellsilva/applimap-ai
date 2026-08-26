@@ -21,11 +21,11 @@ export function SelectedJobProvider({ children }: { children: ReactNode }) {
   const [openSheet, setOpenSheet] = useState<boolean | undefined>(undefined);
 
   return (
-    <SelectedJobContext.Provider
+    <SelectedJobContext
       value={{ selectedJob, setSelectedJob, openSheet, setOpenSheet }}
     >
       {children}
-    </SelectedJobContext.Provider>
+    </SelectedJobContext>
   );
 }
 
