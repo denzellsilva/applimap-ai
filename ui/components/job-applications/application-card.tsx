@@ -1,7 +1,10 @@
 "use client";
 import React from "react";
 import { Card } from "@/ui/components/card";
-import { useSetOpenSheet } from "@/ui/components/job-applications/job-application-context";
+import {
+  useSetOpenSheet,
+  useSetSelectedJob,
+} from "@/ui/components/job-applications/job-application-context";
 
 interface ApplicationCardProps {
   id: string;
@@ -15,11 +18,14 @@ export function ApplicationCard({
   companyName,
 }: ApplicationCardProps) {
   const setOpen = useSetOpenSheet();
+  const setSelectedJob = useSetSelectedJob();
 
   const handleClick = () => {
     setOpen(true);
+    setSelectedJob(id);
     console.log(id);
   };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -34,7 +40,7 @@ export function ApplicationCard({
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      className="cursor-pointer gap-0 rounded-md bg-white p-3 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      className="cursor-pointer gap-0 rounded-md bg-white p-3 shadow-sm hover:bg-gray-50"
     >
       <h4 className="text-sm font-semibold">{title}</h4>
       <p className="text-muted-foreground text-xs">
