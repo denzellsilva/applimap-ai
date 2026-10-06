@@ -31,9 +31,9 @@ export function KanbanSkeleton() {
         </CardHeader>
 
         <CardContent className="no-scrollbar flex-1 space-y-3 overflow-y-auto p-3">
-          <Skeleton className="h-15 gap-0 rounded-md bg-white p-3 opacity-45" />
-          <Skeleton className="h-15 gap-0 rounded-md bg-white p-3 opacity-45" />
-          <Skeleton className="h-15 gap-0 rounded-md bg-white p-3 opacity-45" />
+          <Skeleton className="h-15 gap-0 rounded-md bg-white p-3" />
+          <Skeleton className="h-15 gap-0 rounded-md bg-white p-3" />
+          <Skeleton className="h-15 gap-0 rounded-md bg-white p-3" />
         </CardContent>
       </Card>
     );
