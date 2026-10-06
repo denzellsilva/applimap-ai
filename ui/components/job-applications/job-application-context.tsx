@@ -1,66 +1,95 @@
 "use client";
 
+import { createContext, ReactNode, useContext, useReducer } from "react";
 import {
-  createContext,
-  ReactNode,
-  useState,
-  Dispatch,
-  useContext,
-} from "react";
+  createJobApplication,
+  updateJobApplication,
+} from "@/actions/jobApplication";
+import type { JobApplicationAction } from "@/actions/jobApplication";
 
-interface SelectedJobContextType {
-  selectedJob: string | null;
-  setSelectedJob: Dispatch<React.SetStateAction<string | null>>;
-  openSheet: boolean | undefined;
-  setOpenSheet: Dispatch<React.SetStateAction<boolean | undefined>>;
+interface IKanbanState {
+  selectedJob?: string | null;
+  openSheet: boolean;
+  action: JobApplicationAction;
+  formKey?: number;
 }
-const SelectedJobContext = createContext<SelectedJobContextType | null>(null);
 
-export function SelectedJobProvider({ children }: { children: ReactNode }) {
-  const [selectedJob, setSelectedJob] = useState<string | null>(null);
-  const [openSheet, setOpenSheet] = useState<boolean | undefined>(undefined);
+type KanbanAction =
+  | { type: "create" }
+  | { type: "edit"; selectedJob: string }
+  | { type: "close" };
+
+const KanbanActionContext = createContext<IKanbanState | null>(null);
+const KanbanActionDispatchContext =
+  createContext<React.Dispatch<KanbanAction> | null>(null);
+
+const initialKanbanAction: IKanbanState = {
+  selectedJob: null,
+  openSheet: false,
+  action: createJobApplication,
+  formKey: 0,
+};
+
+export function KanbanActionProvider({ children }: { children: ReactNode }) {
+  const [kanbanAction, dispatch] = useReducer(
+    kanbanActionReducer,
+    initialKanbanAction,
+  );
 
   return (
-    <SelectedJobContext
-      value={{ selectedJob, setSelectedJob, openSheet, setOpenSheet }}
-    >
-      {children}
-    </SelectedJobContext>
+    <KanbanActionContext value={kanbanAction}>
+      <KanbanActionDispatchContext value={dispatch}>
+        {children}
+      </KanbanActionDispatchContext>
+    </KanbanActionContext>
   );
 }
 
-export function useSelectedJob() {
-  const context = useContext(SelectedJobContext);
-  if (!context) {
-    throw new Error("useSelectedJob must be used within a SelectedJobProvider");
-  }
-  return context.selectedJob;
-}
-
-export function useOpenSheet() {
-  const context = useContext(SelectedJobContext);
-  if (!context) {
-    throw new Error("useOpenSheet must be used within a SelectedJobProvider");
-  }
-  return context.openSheet;
-}
-
-export function useSetSelectedJob() {
-  const context = useContext(SelectedJobContext);
+export function useKanbanAction() {
+  const context = useContext(KanbanActionContext);
   if (!context) {
     throw new Error(
-      "useSetSelectedJob must be used within a SelectedJobProvider",
+      "useKanbanAction must be used within a KanbanActionProvider",
     );
   }
-  return context.setSelectedJob;
+  return context;
 }
 
-export function useSetOpenSheet() {
-  const context = useContext(SelectedJobContext);
+export function useKanbanActionDispatch() {
+  const context = useContext(KanbanActionDispatchContext);
   if (!context) {
     throw new Error(
-      "useSetOpenSheet must be used within a SelectedJobProvider",
+      "useKanbanActionDispatch must be used within a KanbanActionProvider",
     );
   }
-  return context.setOpenSheet;
+  return context;
+}
+
+function kanbanActionReducer(
+  state: IKanbanState,
+  action: KanbanAction,
+): IKanbanState {
+  switch (action.type) {
+    case "create":
+      return {
+        selectedJob: null,
+        openSheet: true,
+        action: createJobApplication,
+      };
+    case "edit":
+      return {
+        selectedJob: action.selectedJob,
+        openSheet: true,
+        action: updateJobApplication.bind(null, action.selectedJob),
+      };
+    case "close":
+      return {
+        selectedJob: null,
+        openSheet: false,
+        action: createJobApplication,
+        formKey: (state.formKey ?? 0) + 1,
+      };
+    default:
+      throw Error("Unknown kanban action");
+  }
 }

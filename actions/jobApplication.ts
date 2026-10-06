@@ -40,11 +40,16 @@ export interface State {
   };
 }
 
+export type JobApplicationAction = (
+  prevState: State,
+  formData: FormData,
+) => Promise<State>;
+
 // CREATE
 export async function createJobApplication(
   prevState: State,
   formData: FormData,
-) {
+): Promise<State> {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
@@ -96,7 +101,7 @@ export async function createJobApplication(
   } catch (error) {
     console.error(`Database Error: ${error}`);
     return {
-      message: "Database Error: Failed to save application.",
+      message: "Database Error: Failed to save job application.",
       fields: rawFields,
     };
   }
@@ -118,7 +123,7 @@ export async function getJobApplications() {
         userId: session.user.id,
       },
       orderBy: {
-        createdAt: "desc",
+        updatedAt: "asc",
       },
     });
 
@@ -135,57 +140,97 @@ export async function getJobApplications() {
 }
 
 // READ (Single by ID)
-// export async function getJobApplicationById(id: string) {
-//   const session = await auth();
-//   if (!session?.user?.id) {
-//     throw new Error("Unauthorized");
-//   }
+export async function getJobApplicationById(id: string) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
 
-//   const jobApplication = await prisma.jobApplication.findUnique({
-//     where: {
-//       id,
-//       userId: session.user.id, // Ensure user owns the application
-//     },
-//   });
+  try {
+    const jobApplication = await prisma.jobApplication.findUnique({
+      where: {
+        id,
+        userId: session.user.id, // Ensure user owns the application
+      },
+    });
 
-//   return jobApplication;
-// }
+    return jobApplication;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to get job application.");
+  }
+}
 
 // UPDATE
-// export async function updateJobApplication(
-//   id: string,
-//   data: Partial<JobApplicationInput>,
-// ) {
-//   const session = await auth();
-//   if (!session?.user?.id) {
-//     throw new Error("Unauthorized");
-//   }
+export async function updateJobApplication(
+  id: string,
+  prevState: State,
+  formData: FormData,
+): Promise<State> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
 
-// Verify ownership
-//   const existingApp = await prisma.jobApplication.findUnique({
-//     where: { id },
-//   });
+  // Verify ownership
+  const existingApp = await prisma.jobApplication.findUnique({
+    where: { id },
+  });
 
-//   if (!existingApp || existingApp.userId !== session.user.id) {
-//     throw new Error("Job application not found or unauthorized");
-//   }
+  if (!existingApp || existingApp.userId !== session.user.id) {
+    throw new Error("Job application not found or unauthorized");
+  }
 
-//   const validatedFields = jobApplicationSchema.partial().parse(data);
+  const rawFields = {
+    title: formData.get("title") as string,
+    companyName: formData.get("companyName") as string,
+    status: formData.get("status") as string,
+    location: formData.get("location") as string,
+    description: formData.get("description") as string,
+    salaryRange: formData.get("salaryRange") as string,
+    url: formData.get("url") as string,
+  };
 
-//   const updatedJobApplication = await prisma.jobApplication.update({
-//     where: {
-//       id,
-//     },
-//     data: {
-//       ...validatedFields,
-//       url: validatedFields.url === "" ? null : validatedFields.url,
-//     },
-//   });
+  const validatedFields = jobApplicationSchema.safeParse(rawFields);
 
-//   revalidatePath("/applications");
-//   revalidatePath(`/applications/${id}`);
-//   return updatedJobApplication;
-// }
+  if (!validatedFields.success) {
+    return {
+      errors: z.flattenError(validatedFields.error).fieldErrors,
+      message: "Invalid job application",
+      fields: rawFields,
+    };
+  }
+
+  // const {
+  //   title,
+  //   companyName,
+  //   status,
+  //   location,
+  //   description,
+  //   salaryRange,
+  //   url,
+  // } = validatedFields.data;
+
+  try {
+    await prisma.jobApplication.update({
+      where: {
+        id,
+      },
+      data: {
+        ...validatedFields.data,
+      },
+    });
+  } catch (error) {
+    console.error(`Database Error: ${error}`);
+    return {
+      message: "Database Error: Failed to update job application.",
+      fields: rawFields,
+    };
+  }
+
+  revalidatePath("/applications");
+  return { message: "Job application updated successfully" };
+}
 
 // DELETE
 // export async function deleteJobApplication(id: string) {

@@ -1,36 +1,30 @@
 "use client";
 import React from "react";
 import { Card } from "@/ui/components/card";
-import {
-  useSetOpenSheet,
-  useSetSelectedJob,
-} from "@/ui/components/job-applications/job-application-context";
+import { useKanbanActionDispatch } from "@/ui/components/job-applications/job-application-context";
 
-interface ApplicationCardProps {
+interface JobCardProps {
   id: string;
   title: string;
   companyName?: string | null;
 }
 
-export function ApplicationCard({
-  id,
-  title,
-  companyName,
-}: ApplicationCardProps) {
-  const setOpen = useSetOpenSheet();
-  const setSelectedJob = useSetSelectedJob();
-
+export function JobCard({ id, title, companyName }: JobCardProps) {
+  const kanbanActionDispatch = useKanbanActionDispatch();
   const handleClick = () => {
-    setOpen(true);
-    setSelectedJob(id);
-    console.log(id);
+    kanbanActionDispatch({
+      type: "edit",
+      selectedJob: id,
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      setOpen(true);
-      console.log(id);
+      kanbanActionDispatch({
+        type: "edit",
+        selectedJob: id,
+      });
     }
   };
 
