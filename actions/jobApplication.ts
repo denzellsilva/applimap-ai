@@ -18,7 +18,7 @@ const jobApplicationSchema = z.object({
   url: z.url("Must be a valid URL").optional().nullable().or(z.literal("")),
 });
 
-export interface State {
+export interface JobApplicationState {
   errors?: {
     title?: string[];
     companyName?: string[];
@@ -41,38 +41,59 @@ export interface State {
 }
 
 export type JobApplicationAction = (
-  prevState: State,
+  prevState: JobApplicationState,
   formData: FormData,
-) => Promise<State>;
+) => Promise<JobApplicationState>;
+
+type JobApplicationFields = NonNullable<JobApplicationState["fields"]>;
+type ValidatedJobApplication = z.infer<typeof jobApplicationSchema>;
+
+function validateJobApplicationData(formData: FormData):
+  | {
+      success: true;
+      data: ValidatedJobApplication;
+      fields: JobApplicationFields;
+    }
+  | { success: false; state: JobApplicationState } {
+  const fields: JobApplicationFields = {
+    title: formData.get("title")?.toString() ?? "",
+    companyName: formData.get("companyName")?.toString() ?? "",
+    status: formData.get("status")?.toString() ?? "",
+    location: formData.get("location")?.toString() ?? "",
+    description: formData.get("description")?.toString() ?? "",
+    salaryRange: formData.get("salaryRange")?.toString() ?? "",
+    url: formData.get("url")?.toString() ?? "",
+  };
+
+  const validatedFields = jobApplicationSchema.safeParse(fields);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      state: {
+        errors: z.flattenError(validatedFields.error).fieldErrors,
+        message: "Invalid job application",
+        fields,
+      },
+    };
+  }
+  return { success: true, data: validatedFields.data, fields };
+}
 
 // CREATE
 export async function createJobApplication(
-  prevState: State,
+  prevState: JobApplicationState,
   formData: FormData,
-): Promise<State> {
+): Promise<JobApplicationState> {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
 
-  const rawFields = {
-    title: formData.get("title") as string,
-    companyName: formData.get("companyName") as string,
-    status: formData.get("status") as string,
-    location: formData.get("location") as string,
-    description: formData.get("description") as string,
-    salaryRange: formData.get("salaryRange") as string,
-    url: formData.get("url") as string,
-  };
+  const validatedJobApplication = validateJobApplicationData(formData);
 
-  const validatedFields = jobApplicationSchema.safeParse(rawFields);
-
-  if (!validatedFields.success) {
-    return {
-      errors: z.flattenError(validatedFields.error).fieldErrors,
-      message: "Invalid job application",
-      fields: rawFields,
-    };
+  if (!validatedJobApplication.success) {
+    return validatedJobApplication.state;
   }
 
   const {
@@ -83,7 +104,7 @@ export async function createJobApplication(
     description,
     salaryRange,
     url,
-  } = validatedFields.data;
+  } = validatedJobApplication.data;
 
   try {
     await prisma.jobApplication.create({
@@ -102,7 +123,7 @@ export async function createJobApplication(
     console.error(`Database Error: ${error}`);
     return {
       message: "Database Error: Failed to save job application.",
-      fields: rawFields,
+      fields: validatedJobApplication.fields,
     };
   }
 
@@ -150,7 +171,7 @@ export async function getJobApplicationById(id: string) {
     const jobApplication = await prisma.jobApplication.findUnique({
       where: {
         id,
-        userId: session.user.id, // Ensure user owns the application
+        userId: session.user.id,
       },
     });
 
@@ -164,9 +185,9 @@ export async function getJobApplicationById(id: string) {
 // UPDATE
 export async function updateJobApplication(
   id: string,
-  prevState: State,
+  prevState: JobApplicationState,
   formData: FormData,
-): Promise<State> {
+): Promise<JobApplicationState> {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
@@ -181,35 +202,21 @@ export async function updateJobApplication(
     throw new Error("Job application not found or unauthorized");
   }
 
-  const rawFields = {
-    title: formData.get("title") as string,
-    companyName: formData.get("companyName") as string,
-    status: formData.get("status") as string,
-    location: formData.get("location") as string,
-    description: formData.get("description") as string,
-    salaryRange: formData.get("salaryRange") as string,
-    url: formData.get("url") as string,
-  };
+  const validatedJobApplication = validateJobApplicationData(formData);
 
-  const validatedFields = jobApplicationSchema.safeParse(rawFields);
-
-  if (!validatedFields.success) {
-    return {
-      errors: z.flattenError(validatedFields.error).fieldErrors,
-      message: "Invalid job application",
-      fields: rawFields,
-    };
+  if (!validatedJobApplication.success) {
+    return validatedJobApplication.state;
   }
 
-  // const {
-  //   title,
-  //   companyName,
-  //   status,
-  //   location,
-  //   description,
-  //   salaryRange,
-  //   url,
-  // } = validatedFields.data;
+  const {
+    title,
+    companyName,
+    status,
+    location,
+    description,
+    salaryRange,
+    url,
+  } = validatedJobApplication.data;
 
   try {
     await prisma.jobApplication.update({
@@ -217,14 +224,20 @@ export async function updateJobApplication(
         id,
       },
       data: {
-        ...validatedFields.data,
+        title,
+        companyName,
+        status,
+        location,
+        description,
+        salaryRange,
+        url,
       },
     });
   } catch (error) {
     console.error(`Database Error: ${error}`);
     return {
       message: "Database Error: Failed to update job application.",
-      fields: rawFields,
+      fields: validatedJobApplication.fields,
     };
   }
 

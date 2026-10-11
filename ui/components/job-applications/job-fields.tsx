@@ -15,7 +15,10 @@ import {
 } from "@/ui/components/select";
 import { JobFieldsSkeleton } from "./job-fields-skeleton";
 import { useActionState, useEffect, useState, startTransition } from "react";
-import { getJobApplicationById, State } from "@/actions/jobApplication";
+import {
+  getJobApplicationById,
+  JobApplicationState,
+} from "@/actions/jobApplication";
 import { toast } from "sonner";
 import { Spinner } from "@/ui/components/spinner";
 import { Button } from "@/ui/components/button";
@@ -29,7 +32,7 @@ interface JobFieldsProps {
   id?: string | null;
 }
 
-const initialState: State = { message: null, errors: {} };
+const initialState: JobApplicationState = { message: null, errors: {} };
 
 export function JobFields({ id }: JobFieldsProps) {
   const kanbanAction = useKanbanAction();
