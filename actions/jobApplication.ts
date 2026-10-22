@@ -246,27 +246,32 @@ export async function updateJobApplication(
 }
 
 // DELETE
-// export async function deleteJobApplication(id: string) {
-//   const session = await auth();
-//   if (!session?.user?.id) {
-//     throw new Error("Unauthorized");
-//   }
+export async function deleteJobApplication(id: string) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
 
-//   // Verify ownership
-//   const existingApp = await prisma.jobApplication.findUnique({
-//     where: { id },
-//   });
+  // Verify ownership
+  const existingApp = await prisma.jobApplication.findUnique({
+    where: { id },
+  });
 
-//   if (!existingApp || existingApp.userId !== session.user.id) {
-//     throw new Error("Job application not found or unauthorized");
-//   }
+  if (!existingApp || existingApp.userId !== session.user.id) {
+    throw new Error("Job application not found or unauthorized");
+  }
 
-//   await prisma.jobApplication.delete({
-//     where: {
-//       id,
-//     },
-//   });
+  try {
+    await prisma.jobApplication.delete({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.error(`Database Error: ${error}`);
+    throw new Error("Failed to delete job application.");
+  }
 
-//   revalidatePath("/applications");
-//   return { success: true };
-// }
+  revalidatePath("/applications");
+  return { success: true };
+}
