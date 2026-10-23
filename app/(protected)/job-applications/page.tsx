@@ -7,7 +7,7 @@ import { KanbanActionProvider } from "@/ui/components/job-applications/job-appli
 export default function Page() {
   return (
     <KanbanActionProvider>
-      <div className="flex h-[calc(100vh-36px-8px-40px-16px)] flex-col gap-3">
+      <div className="flex h-[calc(100svh-36px-8px-40px-16px)] flex-col gap-3">
         <section>
           <h1 className="text-2xl font-semibold">Job Applications</h1>
           <div className="flex items-center justify-between">
