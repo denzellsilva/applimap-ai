@@ -48,6 +48,23 @@ export type JobApplicationAction = (
 type JobApplicationFields = NonNullable<JobApplicationState["fields"]>;
 type ValidatedJobApplication = z.infer<typeof jobApplicationSchema>;
 
+async function getNextPosition(
+  userId: string,
+  status: ValidatedJobApplication["status"],
+) {
+  const maxPosition = await prisma.jobApplication.aggregate({
+    where: {
+      userId,
+      status,
+    },
+    _max: {
+      position: true,
+    },
+  });
+
+  return (maxPosition._max.position ?? 0) + 1;
+}
+
 function validateJobApplicationData(formData: FormData):
   | {
       success: true;
@@ -107,17 +124,7 @@ export async function createJobApplication(
   } = validatedJobApplication.data;
 
   try {
-    const maxPosition = await prisma.jobApplication.aggregate({
-      where: {
-        userId: session.user.id,
-        status,
-      },
-      _max: {
-        position: true,
-      },
-    });
-
-    const newPosition = (maxPosition._max.position ?? 0) + 1;
+    const newPosition = await getNextPosition(session.user.id, status);
 
     await prisma.jobApplication.create({
       data: {
@@ -247,16 +254,7 @@ export async function updateJobApplication(
     });
 
     if (existingApp && existingApp.status !== status) {
-      const maxPosition = await prisma.jobApplication.aggregate({
-        where: {
-          userId: session.user.id,
-          status,
-        },
-        _max: {
-          position: true,
-        },
-      });
-      const newPosition = (maxPosition._max.position ?? 0) + 1;
+      const newPosition = await getNextPosition(session.user.id, status);
       await prisma.jobApplication.update({
         where: {
           id,
