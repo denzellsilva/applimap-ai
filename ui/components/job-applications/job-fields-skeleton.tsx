@@ -2,7 +2,7 @@ import { Skeleton } from "@/ui/components/skeleton";
 
 export function JobFieldsSkeleton() {
   return (
-    <div>
+    <div className="px-4">
       <div className="grid gap-4 md:grid-cols-2 md:gap-6">
         {Array.from({ length: 6 }).map((_, index) => (
           <div className="space-y-2" key={index}>

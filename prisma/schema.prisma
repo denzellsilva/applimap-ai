@@ -94,6 +94,7 @@ model JobApplication {
   description String?
   salaryRange String?
   url         String?
+  position    Int @default(0)
 
   userId      String
   user        User @relation(fields: [userId], references: [id], onDelete: Cascade)

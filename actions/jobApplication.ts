@@ -48,6 +48,23 @@ export type JobApplicationAction = (
 type JobApplicationFields = NonNullable<JobApplicationState["fields"]>;
 type ValidatedJobApplication = z.infer<typeof jobApplicationSchema>;
 
+async function getNextPosition(
+  userId: string,
+  status: ValidatedJobApplication["status"],
+) {
+  const maxPosition = await prisma.jobApplication.aggregate({
+    where: {
+      userId,
+      status,
+    },
+    _max: {
+      position: true,
+    },
+  });
+
+  return (maxPosition._max.position ?? 0) + 1;
+}
+
 function validateJobApplicationData(formData: FormData):
   | {
       success: true;
@@ -107,6 +124,8 @@ export async function createJobApplication(
   } = validatedJobApplication.data;
 
   try {
+    const newPosition = await getNextPosition(session.user.id, status);
+
     await prisma.jobApplication.create({
       data: {
         title,
@@ -117,6 +136,7 @@ export async function createJobApplication(
         salaryRange,
         url,
         userId: session.user.id,
+        position: newPosition,
       },
     });
   } catch (error) {
@@ -144,7 +164,7 @@ export async function getJobApplications() {
         userId: session.user.id,
       },
       orderBy: {
-        updatedAt: "asc",
+        position: "asc",
       },
     });
 
@@ -194,12 +214,22 @@ export async function updateJobApplication(
   }
 
   // Verify ownership
-  const existingApp = await prisma.jobApplication.findUnique({
-    where: { id },
-  });
+  try {
+    const existingApp = await prisma.jobApplication.findUnique({
+      where: { id },
+    });
 
-  if (!existingApp || existingApp.userId !== session.user.id) {
-    throw new Error("Job application not found or unauthorized");
+    if (!existingApp || existingApp.userId !== session.user.id) {
+      throw new Error("Job application not found or unauthorized");
+    }
+  } catch (error) {
+    console.error(`Database Error: ${error}`);
+    return {
+      message:
+        error instanceof Error
+          ? error.message
+          : "Database Error: Failed to verify job application.",
+    };
   }
 
   const validatedJobApplication = validateJobApplicationData(formData);
@@ -219,20 +249,43 @@ export async function updateJobApplication(
   } = validatedJobApplication.data;
 
   try {
-    await prisma.jobApplication.update({
-      where: {
-        id,
-      },
-      data: {
-        title,
-        companyName,
-        status,
-        location,
-        description,
-        salaryRange,
-        url,
-      },
+    const existingApp = await prisma.jobApplication.findUnique({
+      where: { id },
     });
+
+    if (existingApp && existingApp.status !== status) {
+      const newPosition = await getNextPosition(session.user.id, status);
+      await prisma.jobApplication.update({
+        where: {
+          id,
+        },
+        data: {
+          title,
+          companyName,
+          status,
+          location,
+          description,
+          salaryRange,
+          url,
+          position: newPosition,
+        },
+      });
+    } else {
+      await prisma.jobApplication.update({
+        where: {
+          id,
+        },
+        data: {
+          title,
+          companyName,
+          status,
+          location,
+          description,
+          salaryRange,
+          url,
+        },
+      });
+    }
   } catch (error) {
     console.error(`Database Error: ${error}`);
     return {
