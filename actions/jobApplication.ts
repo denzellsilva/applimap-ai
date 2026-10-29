@@ -4,8 +4,9 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { validateJobApplicationData, getNextPosition } from "@/lib/utils";
 
-const jobApplicationSchema = z.object({
+export const jobApplicationSchema = z.object({
   title: z.string().min(1, "Title is required"),
   companyName: z.string().min(1, "Company name is required"),
   status: z.enum(["WISH_LIST", "APPLIED", "INTERVIEW", "OFFER", "REJECTED"], {
@@ -45,57 +46,6 @@ export type JobApplicationAction = (
   formData: FormData,
 ) => Promise<JobApplicationState>;
 
-type JobApplicationFields = NonNullable<JobApplicationState["fields"]>;
-type ValidatedJobApplication = z.infer<typeof jobApplicationSchema>;
-
-async function getNextPosition(
-  userId: string,
-  status: ValidatedJobApplication["status"],
-) {
-  const maxPosition = await prisma.jobApplication.aggregate({
-    where: {
-      userId,
-      status,
-    },
-    _max: {
-      position: true,
-    },
-  });
-
-  return (maxPosition._max.position ?? 0) + 1;
-}
-
-function validateJobApplicationData(formData: FormData):
-  | {
-      success: true;
-      data: ValidatedJobApplication;
-      fields: JobApplicationFields;
-    }
-  | { success: false; state: JobApplicationState } {
-  const fields: JobApplicationFields = {
-    title: formData.get("title")?.toString() ?? "",
-    companyName: formData.get("companyName")?.toString() ?? "",
-    status: formData.get("status")?.toString() ?? "",
-    location: formData.get("location")?.toString() ?? "",
-    description: formData.get("description")?.toString() ?? "",
-    salaryRange: formData.get("salaryRange")?.toString() ?? "",
-    url: formData.get("url")?.toString() ?? "",
-  };
-
-  const validatedFields = jobApplicationSchema.safeParse(fields);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      state: {
-        errors: z.flattenError(validatedFields.error).fieldErrors,
-        message: "Invalid job application",
-        fields,
-      },
-    };
-  }
-  return { success: true, data: validatedFields.data, fields };
-}
 
 // CREATE
 export async function createJobApplication(
