@@ -1,9 +1,9 @@
 "use server";
 
-import { JobApplicationState } from "@/actions/job-application/types";
 import { auth } from "@/auth";
-import { validateJobApplicationData } from "@/actions/job-application/validation";
-import { getNextPosition } from "@/actions/job-application/helpers";
+import { getNextPosition } from "@/actions/job-application/lib/helpers";
+import { validateJobApplicationData } from "@/actions/job-application/lib/validation";
+import type { JobApplicationState } from "@/actions/job-application/lib/types";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 

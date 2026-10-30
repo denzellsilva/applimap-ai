@@ -15,8 +15,8 @@ import {
 } from "@/ui/components/select";
 import { JobFieldsSkeleton } from "./job-fields-skeleton";
 import { useActionState, useEffect, useState, startTransition } from "react";
-import { getJobApplicationById } from "@/actions/job-application/use-cases/show";
-import type { JobApplicationState } from "@/actions/job-application/types";
+import { getJobApplicationById } from "@/actions/job-application/show";
+import type { JobApplicationState } from "@/actions/job-application/lib/types";
 import { toast } from "sonner";
 import { Spinner } from "@/ui/components/spinner";
 import { Button } from "@/ui/components/button";

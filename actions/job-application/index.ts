@@ -3,7 +3,6 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 
-// READ (All for current user)
 export async function getJobApplications() {
   const session = await auth();
   if (!session?.user?.id) {

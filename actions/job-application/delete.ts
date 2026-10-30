@@ -4,14 +4,12 @@ import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-// DELETE
 export async function deleteJobApplication(id: string) {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
 
-  // Verify ownership
   const existingApp = await prisma.jobApplication.findUnique({
     where: { id },
   });
@@ -22,9 +20,7 @@ export async function deleteJobApplication(id: string) {
 
   try {
     await prisma.jobApplication.delete({
-      where: {
-        id,
-      },
+      where: { id },
     });
   } catch (error) {
     console.error(`Database Error: ${error}`);

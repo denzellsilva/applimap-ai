@@ -1,7 +1,7 @@
 import { useTransition } from "react";
 import { Button } from "../button";
 import { Trash2 } from "lucide-react";
-import { deleteJobApplication } from "@/actions/job-application/use-cases/delete";
+import { deleteJobApplication } from "@/actions/job-application/delete";
 import { toast } from "sonner";
 import {
   AlertDialog,

@@ -1,9 +1,9 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useReducer } from "react";
-import { createJobApplication } from "@/actions/job-application/use-cases/create";
-import { updateJobApplication } from "@/actions/job-application/use-cases/update";
-import type { JobApplicationAction } from "@/actions/job-application/types";
+import { createJobApplication } from "@/actions/job-application/create";
+import { updateJobApplication } from "@/actions/job-application/update";
+import type { JobApplicationAction } from "@/actions/job-application/lib/types";
 
 interface IKanbanState {
   selectedJob?: string | null;

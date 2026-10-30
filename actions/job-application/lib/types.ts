@@ -1,4 +1,4 @@
-import { jobApplicationSchema } from "@/actions/job-application/schema";
+import { jobApplicationSchema } from "@/actions/job-application/lib/schema";
 import { z } from "zod";
 
 export interface JobApplicationState {

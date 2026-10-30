@@ -1,7 +1,5 @@
-"use server";
-
 import prisma from "@/lib/prisma";
-import type { ValidatedJobApplication } from "@/actions/job-application/types";
+import type { ValidatedJobApplication } from "@/actions/job-application/lib/types";
 
 export async function getNextPosition(
   userId: string,
@@ -19,5 +17,3 @@ export async function getNextPosition(
 
   return (maxPosition._max.position ?? 0) + 1;
 }
-
-

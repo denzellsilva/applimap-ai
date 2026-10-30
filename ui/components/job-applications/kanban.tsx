@@ -6,7 +6,7 @@ import {
   CardContent,
 } from "@/ui/components/card";
 import { columns } from "@/ui/job-applications/kanban-styles";
-import { getJobApplications } from "@/actions/job-application/use-cases/index";
+import { getJobApplications } from "@/actions/job-application/index";
 import { JobCard } from "@/ui/components/job-applications/job-card";
 
 export async function Kanban() {

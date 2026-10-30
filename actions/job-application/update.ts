@@ -1,13 +1,12 @@
 "use server";
 
-import { JobApplicationState } from "@/actions/job-application/types";
 import { auth } from "@/auth";
+import { getNextPosition } from "@/actions/job-application/lib/helpers";
+import { validateJobApplicationData } from "@/actions/job-application/lib/validation";
+import type { JobApplicationState } from "@/actions/job-application/lib/types";
 import prisma from "@/lib/prisma";
-import { validateJobApplicationData } from "@/actions/job-application/validation";
-import { getNextPosition } from "@/actions/job-application/helpers";
 import { revalidatePath } from "next/cache";
 
-// UPDATE
 export async function updateJobApplication(
   id: string,
   prevState: JobApplicationState,
@@ -18,7 +17,6 @@ export async function updateJobApplication(
     throw new Error("Unauthorized");
   }
 
-  // Verify ownership
   try {
     const existingApp = await prisma.jobApplication.findUnique({
       where: { id },
@@ -61,9 +59,7 @@ export async function updateJobApplication(
     if (existingApp && existingApp.status !== status) {
       const newPosition = await getNextPosition(session.user.id, status);
       await prisma.jobApplication.update({
-        where: {
-          id,
-        },
+        where: { id },
         data: {
           title,
           companyName,
@@ -77,9 +73,7 @@ export async function updateJobApplication(
       });
     } else {
       await prisma.jobApplication.update({
-        where: {
-          id,
-        },
+        where: { id },
         data: {
           title,
           companyName,

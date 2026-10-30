@@ -2,8 +2,8 @@ import {
   JobApplicationFields,
   JobApplicationState,
   ValidatedJobApplication,
-} from "@/actions/job-application/types";
-import { jobApplicationSchema } from "@/actions/job-application/schema";
+} from "@/actions/job-application/lib/types";
+import { jobApplicationSchema } from "@/actions/job-application/lib/schema";
 import { z } from "zod";
 
 export function validateJobApplicationData(formData: FormData):
