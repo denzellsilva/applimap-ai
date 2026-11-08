@@ -3,6 +3,7 @@ import { inter } from "@/ui/fonts";
 import "@/ui/globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/ui/components/sonner";
+import { TooltipProvider } from "@/ui/components/tooltip";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,8 +21,10 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", "font-sans", inter.variable)}
     >
       <body>
-        <Toaster />
-        {children}
+        <TooltipProvider>
+          <Toaster />
+          {children}
+        </TooltipProvider>
       </body>
     </html>
   );
