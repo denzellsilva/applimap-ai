@@ -1,26 +1,37 @@
-import { quantico } from "@/ui/fonts";
-import { LogOut } from "lucide-react";
-import { signOut } from "@/auth";
+import { auth } from "@/auth";
+import { AppSidebar } from "@/ui/components/sidebar/app-sidebar";
+import { SiteHeader } from "@/ui/components/sidebar/site-header";
+import { SidebarInset, SidebarProvider } from "@/ui/components/sidebar";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user) return null;
+
   return (
     <>
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white p-2 px-4">
-        <div id="logo" className={`${quantico.className} text-3xl`}>
-          <span className="font-bold text-green-800">Appli</span>Map
-        </div>
-        <form
-          action={async () => {
-            "use server";
-            await signOut();
-          }}
-        >
-          <button type="submit" aria-label="Sign out" title="Sign out">
-            <LogOut />
-          </button>
-        </form>
-      </header>
-      <main className="px-10 pt-10">{children}</main>
+      <div className="[--header-height:calc(--spacing(14))]">
+        <SidebarProvider className="flex flex-col">
+          <SiteHeader
+            user={{
+              name: user.name ?? "User",
+              email: user.email ?? "",
+              image: user.image ?? null,
+            }}
+          />
+          <div className="flex flex-1">
+            <AppSidebar />
+            <SidebarInset className="min-w-0">
+              <main className="flex-1 px-10 pt-10">{children}</main>
+            </SidebarInset>
+          </div>
+        </SidebarProvider>
+      </div>
     </>
   );
 }
