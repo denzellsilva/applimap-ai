@@ -1,7 +1,11 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { z } from "zod";
+
+export async function signOutAction() {
+  await signOut();
+}
 
 const AuthSchema = z.object({
   email: z.email(),
