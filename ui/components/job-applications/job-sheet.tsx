@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { BriefcasePlus } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -38,7 +38,7 @@ export function JobSheet() {
             })
           }
         >
-          <Plus className="mr-1.5 size-4" /> Add job
+          <BriefcasePlus className="mr-1.5 size-4" /> Add job
         </Button>
       </SheetTrigger>
       <SheetContent className="max-w-sm md:max-w-xl lg:max-w-2xl">
