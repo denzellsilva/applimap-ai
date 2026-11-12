@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { NavMain } from "@/ui/components/sidebar/nav-main";
+// don't delete this comment, you'll need this once your app has a user menu
 // import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -12,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/ui/components/sidebar";
-import { LayoutDashboardIcon, ListIcon, LogOut, Radar } from "lucide-react";
+import { Briefcase, LayoutDashboardIcon, ListIcon, LogOut } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
 
 const data = {
@@ -28,9 +29,9 @@ const data = {
       icon: <LayoutDashboardIcon />,
     },
     {
-      title: "Job Tracker",
+      title: "Job Applications",
       url: "/job-applications",
-      icon: <Radar />,
+      icon: <Briefcase />,
     },
     {
       title: "JD Analysis",
