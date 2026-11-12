@@ -22,7 +22,6 @@ export function UserAvatar({
     <div>
       <Avatar>
         <AvatarImage src={user.image ?? undefined} alt={user.name} />
-        <AvatarImage src={undefined} alt={user.name} />
         <AvatarFallback>
           {initials || user.email[0]?.toUpperCase() || "U"}
         </AvatarFallback>
